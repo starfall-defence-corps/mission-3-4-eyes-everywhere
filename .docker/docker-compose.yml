@@ -1,0 +1,76 @@
+# =============================================================================
+# MOS 4 — Eyes Everywhere: telemetry at scale
+#
+# Three fleet nodes forward telemetry to a central collector (sdc-collector).
+# The collector proves DELIVERY (behavioural), not configuration. Only the
+# collector's control plane is host-mapped (9000); node->collector telemetry
+# stays on the docker net, so the shared 2221-2223 SSH-port budget is untouched.
+# =============================================================================
+services:
+  sdc-web:
+    build: { context: ., dockerfile: Dockerfile.node }
+    container_name: sdc-web
+    hostname: sdc-web
+    privileged: true
+    cgroup: host
+    tmpfs: [/run, /run/lock, /tmp]
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - ./ssh-keys/authorized_keys:/home/cadet/.ssh/authorized_keys:ro
+    networks:
+      fleet_net: { ipv4_address: 172.30.0.11 }
+    ports: ["2221:22"]
+
+  sdc-db:
+    build: { context: ., dockerfile: Dockerfile.node }
+    container_name: sdc-db
+    hostname: sdc-db
+    privileged: true
+    cgroup: host
+    tmpfs: [/run, /run/lock, /tmp]
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - ./ssh-keys/authorized_keys:/home/cadet/.ssh/authorized_keys:ro
+    networks:
+      fleet_net: { ipv4_address: 172.30.0.12 }
+    ports: ["2222:22"]
+
+  sdc-comms:
+    build: { context: ., dockerfile: Dockerfile.node }
+    container_name: sdc-comms
+    hostname: sdc-comms
+    privileged: true
+    cgroup: host
+    tmpfs: [/run, /run/lock, /tmp]
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+      - ./ssh-keys/authorized_keys:/home/cadet/.ssh/authorized_keys:ro
+    networks:
+      fleet_net: { ipv4_address: 172.30.0.13 }
+    ports: ["2223:22"]
+
+  # ── Central collector / SIEM sink — opaque range infra ───────────────────
+  # Syslog receiver (:5514) + agent ingest (:8081) bind the ACTIVE ip (.20,
+  # then .21 after relocation). Control plane (:80 -> host 9000) is always up.
+  sdc-collector:
+    build: { context: ., dockerfile: Dockerfile.collector }
+    container_name: sdc-collector
+    hostname: sdc-collector
+    restart: unless-stopped
+    cap_add: [NET_ADMIN]        # to add the .21 alias on relocation
+    mem_limit: 128m
+    pids_limit: 256
+    volumes:
+      - ../.lab:/lab            # received events + latched status (gitignored)
+    networks:
+      fleet_net: { ipv4_address: 172.30.0.20 }
+    ports: ["9000:80"]
+    depends_on: [sdc-web, sdc-db, sdc-comms]
+
+networks:
+  fleet_net:
+    name: fleet_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24

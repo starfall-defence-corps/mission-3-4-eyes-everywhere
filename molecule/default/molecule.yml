@@ -1,0 +1,25 @@
+dependency:
+  name: galaxy
+
+driver:
+  name: default
+
+platforms:
+  - name: sdc-web
+    managed: false
+    groups:
+      - fleet
+  - name: sdc-db
+    managed: false
+    groups:
+      - fleet
+  - name: sdc-comms
+    managed: false
+    groups:
+      - fleet
+
+provisioner:
+  name: ansible
+
+verifier:
+  name: testinfra

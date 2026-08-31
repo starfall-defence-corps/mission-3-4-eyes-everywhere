@@ -1,0 +1,7 @@
+---
+# Deploy fleet telemetry. The work is in roles/telemetry.
+- name: Eyes Everywhere — deploy telemetry at scale
+  hosts: fleet
+  become: true
+  roles:
+    - telemetry

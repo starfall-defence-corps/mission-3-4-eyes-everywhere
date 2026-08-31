@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""fleetquery — a lightweight osquery-style scheduled-query agent (PROVIDED).
+
+You DEPLOY this with your role (copy it, template its config, enable its timer);
+you do not need to modify it. On each run it:
+  * reads its config from /etc/sdc/fleetquery.conf
+  * reads this node's telemetry-id from /etc/sdc/node-id
+  * POSTs a heartbeat to the collector
+  * watches the probe directory and reports any new files (file-integrity style)
+
+Delivery to the collector is over HTTP (stdlib urllib — no external deps).
+"""
+import configparser
+import json
+import os
+import socket
+import sys
+import urllib.request
+
+CONF = "/etc/sdc/fleetquery.conf"
+NODE_ID_FILE = "/etc/sdc/node-id"
+SEEN_DIR = "/var/lib/fleetquery"
+SEEN_FILE = os.path.join(SEEN_DIR, "seen.json")
+
+
+def _cfg():
+    c = configparser.ConfigParser()
+    # tolerate a header-less conf by injecting a section
+    with open(CONF) as f:
+        text = f.read()
+    if "[fleetquery]" not in text:
+        text = "[fleetquery]\n" + text
+    c.read_string(text)
+    s = c["fleetquery"]
+    return {
+        "agent_url": s.get("agent_url"),
+        "probe_dir": s.get("probe_dir", "/opt/sdc-telemetry/probes"),
+    }
+
+
+def _node_nonce():
+    try:
+        with open(NODE_ID_FILE) as f:
+            return f.read().strip()
+    except OSError:
+        return ""
+
+
+def _post(url, obj):
+    data = json.dumps(obj).encode()
+    req = urllib.request.Request(url, data=data,
+                                 headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=3) as r:
+            r.read()
+        return True
+    except Exception:
+        return False
+
+
+def _load_seen():
+    try:
+        with open(SEEN_FILE) as f:
+            return set(json.load(f))
+    except Exception:
+        return set()
+
+
+def _save_seen(seen):
+    os.makedirs(SEEN_DIR, exist_ok=True)
+    tmp = SEEN_FILE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(sorted(seen), f)
+    os.replace(tmp, SEEN_FILE)
+
+
+def main():
+    cfg = _cfg()
+    host = socket.gethostname()
+    node_nonce = _node_nonce()
+    url = cfg["agent_url"]
+    if not url:
+        sys.exit(0)
+
+    # Heartbeat (identity: this node's telemetry-id).
+    _post(url, {"source": host, "channel": "agent", "nonce": node_nonce,
+                "node_nonce": node_nonce, "event_type": "heartbeat"})
+
+    # File-integrity: report any newly-seen files in the probe dir.
+    probe_dir = cfg["probe_dir"]
+    seen = _load_seen()
+    try:
+        entries = os.listdir(probe_dir)
+    except OSError:
+        entries = []
+    for name in entries:
+        if name in seen:
+            continue
+        path = os.path.join(probe_dir, name)
+        _post(url, {"source": host, "channel": "agent", "nonce": name,
+                    "node_nonce": node_nonce, "path": path,
+                    "event_type": "file_watch"})
+        seen.add(name)
+    _save_seen(seen)
+
+
+if __name__ == "__main__":
+    main()

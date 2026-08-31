@@ -1,0 +1,10 @@
+---
+# Phase 1 & 4 — Deploy the osquery-style fleetquery agent.
+# TODO:
+#   - Copy the provided agent (files/fleetquery) to /usr/local/bin/fleetquery (0755).
+#   - Template its config /etc/sdc/fleetquery.conf (agent_url, probe_dir).
+#   - Install the fleetquery.service + fleetquery.timer units and enable --now the
+#     timer so it runs every {{ agent_interval_seconds }} seconds.
+- name: TODO — deploy + enable the fleetquery agent
+  ansible.builtin.debug:
+    msg: "Replace me: deploy files/fleetquery, template its config, enable the timer."

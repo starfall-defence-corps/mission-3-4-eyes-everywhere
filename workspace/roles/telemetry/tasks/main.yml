@@ -1,0 +1,5 @@
+---
+# Telemetry role entry point. Each include builds one sensor stream.
+- import_tasks: rsyslog.yml
+- import_tasks: audit.yml
+- import_tasks: agent.yml

@@ -1,0 +1,10 @@
+---
+# Phase 2 — Forward the fleet's logs to the collector.
+# TODO:
+#   - Template a forwarding rule into /etc/rsyslog.d/ that ships *.* to the
+#     collector over TCP at "{{ collector_host }}:{{ syslog_port }}".
+#     Use the NAME collector_host, not an IP — the SIEM relocates in Phase 5.
+#   - notify a handler to restart rsyslog so the rule takes effect.
+- name: TODO — forward logs to the collector
+  ansible.builtin.debug:
+    msg: "Replace me: template the rsyslog forward rule and notify 'restart rsyslog'."

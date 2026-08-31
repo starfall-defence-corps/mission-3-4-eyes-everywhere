@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  role_name: telemetry
+  description: Deploy fleet telemetry — rsyslog forwarding, audit shim, fleetquery agent
+  license: MIT
+  min_ansible_version: "2.10"
+dependencies: []
