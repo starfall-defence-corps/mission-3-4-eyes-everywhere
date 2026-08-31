@@ -1,0 +1,11 @@
+FROM python:3.12-slim
+
+# iproute2 provides `ip` (the relocation capstone adds the .21 alias).
+RUN apt-get update && apt-get install -y --no-install-recommends iproute2 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY collector-server.py /opt/collector-server.py
+
+# Control :80 (host 9000) · syslog :5514 · agent ingest :8081
+EXPOSE 80 5514 8081
+CMD ["python3", "/opt/collector-server.py"]

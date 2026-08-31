@@ -1,0 +1,8 @@
+---
+# Overridable defaults (inventory/group_vars/all.yml sets these for the fleet).
+collector_host: sdc-collector
+syslog_port: 5514
+agent_url: "http://sdc-collector:8081/tel/v1/events"
+agent_interval_seconds: 5
+probe_dir: /opt/sdc-telemetry/probes
+node_id_file: /etc/sdc/node-id

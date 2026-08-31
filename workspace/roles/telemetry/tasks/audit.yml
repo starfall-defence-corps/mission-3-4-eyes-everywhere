@@ -1,0 +1,10 @@
+---
+# Phase 3 — Deliver audit-class events.
+# TODO:
+#   - Deploy audit rules to /etc/audit/rules.d/sdc.rules (watch identity files).
+#   - Deploy the userspace shim /usr/local/bin/sdc-audit-shim (mode 0755). It
+#     emits an audit-class event through journald so it rides the same reliable
+#     pipe to the collector. (Kernel auditd is unreliable in containers.)
+- name: TODO — deploy audit rules + the audit shim
+  ansible.builtin.debug:
+    msg: "Replace me: deploy /etc/audit/rules.d/sdc.rules and /usr/local/bin/sdc-audit-shim."

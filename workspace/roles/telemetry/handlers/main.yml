@@ -1,0 +1,12 @@
+---
+# Provided handlers — notify these from your tasks when config changes.
+- name: restart rsyslog
+  ansible.builtin.service:
+    name: rsyslog
+    state: restarted
+
+- name: restart fleetquery
+  ansible.builtin.systemd:
+    name: fleetquery.timer
+    state: restarted
+    daemon_reload: true

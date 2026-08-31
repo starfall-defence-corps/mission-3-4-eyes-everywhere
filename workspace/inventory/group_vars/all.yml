@@ -1,0 +1,9 @@
+# Telemetry destination + tunables (provided). Reference the collector by NAME
+# (`collector_host`) — never a hardcoded IP. The SIEM can move, and a config
+# that pins 172.30.0.20 will go blind when it does.
+collector_host: sdc-collector
+syslog_port: 5514
+agent_url: "http://sdc-collector:8081/tel/v1/events"
+agent_interval_seconds: 5
+probe_dir: /opt/sdc-telemetry/probes
+node_id_file: /etc/sdc/node-id
