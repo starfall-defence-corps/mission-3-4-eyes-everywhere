@@ -3,7 +3,7 @@
 # Manual git remains the advanced path; this is the one-command version.
 set -u
 
-MISSION="Mission 2.6: Counterattack"
+MISSION="MOS 4: Eyes Everywhere"
 BRANCH="mission-submission"
 
 GREEN='\033[32m'

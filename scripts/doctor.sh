@@ -89,14 +89,14 @@ fi
 # see this after 'make setup', reset the lab so the range comes back.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^sdc-noise$'; then
+if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^sdc-collector$'; then
     if curl -sf -m 2 http://localhost:9000/healthz > /dev/null 2>&1; then
-        pass "Range monitor responding (C2 sink + uptime probe on :9000)"
+        pass "Range monitor responding (collector health probe on :9000)"
     else
         warn "Range monitor not answering on :9000" "Give 'make setup' a few more seconds, or run 'make reset' before 'make test'"
     fi
     if [ -f "$ROOT_DIR/.lab/baseline.json" ]; then
-        pass "Range baseline recorded (implants armed)"
+        pass "Range baseline recorded (per-node telemetry-id armed)"
     else
         warn "Range baseline not found" "Run 'make setup' (or 'make reset') to arm the range and record the baseline"
     fi
