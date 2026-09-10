@@ -84,7 +84,7 @@ make test
 
 The fleet comes up **online and dark**: three nodes, no telemetry flowing anywhere. Your job is to make every node's logs, audit-class events, and agent heartbeats reach `sdc-collector` — referenced by **name**, never by address, because the Phantom Logstash relocates it mid-mission. ARIA reads the collector's own control plane at `localhost:9000` to score delivery, independent of your inventory.
 
-Only one SDC lab can run at a time — all missions share ports 2221-2223 and subnet 172.30.0.0/24. Run `make destroy` in any other mission first.
+Only one SDC lab at a time is supported — run `make destroy` in any other mission first.
 
 ## Available Commands
 
@@ -130,7 +130,9 @@ skipped and `make test` still works locally.
 
 ## Troubleshooting
 
-**Containers won't start**: Ensure Docker Desktop is running; check for port conflicts on 2221-2223 (only one SDC lab can run at a time — `make destroy` in any other mission first).
+**Containers won't start**: Ensure Docker Desktop is running; check for port conflicts on 2221-2223. Only one SDC lab at a time is supported — run `make destroy` in any other mission first.
+
+**"port is already allocated" on 9000**: `mission-2-6-counterattack` publishes a service on host port 9000 too — run `make destroy` there first.
 
 **`make test` reports everything skipped**: the collector isn't answering on `:9000` or the range baseline is missing — run `make reset`.
 
