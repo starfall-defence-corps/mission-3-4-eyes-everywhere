@@ -1,5 +1,7 @@
 # Mission 3.4: Eyes Everywhere — Hints & Troubleshooting Guide
 
+> 📚 Deeper reference: [FM-1 — Ansible Module Reference](https://github.com/starfall-defence-corps/sdc-academy/blob/main/field-manuals/FM-1-ansible-reference.md)
+
 **Rank**: Lieutenant Commander (Minimal Scaffolding)
 
 This guide escalates in three stages per phase: a **Nudge** (a question to

@@ -1,6 +1,6 @@
 # Starfall Defence Corps Academy
 
-> 🧭 [← Master Simulation](https://github.com/starfall-defence-corps/master-simulation) · **You are here: MOS 4 · Mission 1 — Eyes Everywhere** · [🏠 Academy Hub](https://github.com/starfall-defence-corps/sdc-academy)
+> 🧭 [← Master Simulation](https://github.com/starfall-defence-corps/master-simulation) · **You are here: MOS 4 · Mission 1 — Eyes Everywhere** · [MOS 5 · Battle Rattle →](https://github.com/starfall-defence-corps/mission-3-5-battle-rattle) · [🏠 Academy Hub](https://github.com/starfall-defence-corps/sdc-academy) · [📚 Field Manuals](https://github.com/starfall-defence-corps/sdc-academy/tree/main/field-manuals)
 
 > ☁️ **No Docker on your machine?** Create your own copy first (Use this template), then on **your** repo: **Code → Codespaces → Create codespace** — everything is preinstalled. First boot takes ~5 min (one-time); after that it starts fast.
 

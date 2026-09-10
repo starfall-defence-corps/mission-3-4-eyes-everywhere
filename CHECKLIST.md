@@ -77,3 +77,5 @@ phase is blocked, see `docs/HINTS.md`.
 
 - [ ] `make test` — all five phases pass
 - [ ] `make submit` — work submitted for ARIA review
+
+**Next stop**: [MOS 5 — Battle Rattle](https://github.com/starfall-defence-corps/mission-3-5-battle-rattle)
