@@ -9,18 +9,7 @@ DOCUMENT: EXERCISES — Phase-by-Phase Operational Instructions
 Complete each phase in sequence. Run `make test` after each phase. Do not
 advance until ARIA confirms compliance.
 
-**Two directories, two purposes:**
-
-- **Ansible commands** (`ansible-playbook`): Run from `workspace/` where `ansible.cfg` lives.
-- **Make commands** (`make test`, `make reset`): Run from the **project root** (where the `Makefile` lives).
-
-When a phase says "Run ARIA's Verification", return to the project root first:
-
-```bash
-cd ..        # from workspace/ back to project root
-make test
-cd workspace # return to workspace for the next phase
-```
+**One directory for everything**: run every command in this mission — `ansible-playbook ...` and `make ...` — from the **project root** (the folder with the `Makefile`). An `ansible.cfg` lives both there and in `workspace/`, so Ansible works from either; the steps below assume the project root throughout.
 
 **A note on `make test`**: it applies your `telemetry` role once (via
 `workspace/site.yml`), then injects a fresh, nonced event on every node for
@@ -76,16 +65,15 @@ applied fleet-wide via `site.yml`. Take a look at what's already
 scaffolded for you:
 
 ```bash
-cd workspace
-cat site.yml
-cat inventory/hosts.yml
-cat inventory/group_vars/all.yml
-cat roles/telemetry/defaults/main.yml
-cat roles/telemetry/tasks/main.yml
-cat roles/telemetry/tasks/rsyslog.yml
-cat roles/telemetry/tasks/audit.yml
-cat roles/telemetry/tasks/agent.yml
-cat roles/telemetry/handlers/main.yml
+cat workspace/site.yml
+cat workspace/inventory/hosts.yml
+cat workspace/inventory/group_vars/all.yml
+cat workspace/roles/telemetry/defaults/main.yml
+cat workspace/roles/telemetry/tasks/main.yml
+cat workspace/roles/telemetry/tasks/rsyslog.yml
+cat workspace/roles/telemetry/tasks/audit.yml
+cat workspace/roles/telemetry/tasks/agent.yml
+cat workspace/roles/telemetry/handlers/main.yml
 ```
 
 `tasks/rsyslog.yml`, `tasks/audit.yml`, and `tasks/agent.yml` are stubs
@@ -150,13 +138,8 @@ stdlib-only Python script. You need to:
 ### Step 1.2 — Apply and Verify
 
 ```bash
-ansible-playbook site.yml
-```
-
-```bash
-cd ..
+ansible-playbook workspace/site.yml
 make test
-cd workspace
 ```
 
 ARIA checks that `fleetquery.timer` is enabled **and** active on every
@@ -188,13 +171,8 @@ Fill in `workspace/roles/telemetry/tasks/rsyslog.yml`.
 ### Step 2.2 — Apply and Verify
 
 ```bash
-ansible-playbook site.yml
-```
-
-```bash
-cd ..
+ansible-playbook workspace/site.yml
 make test
-cd workspace
 ```
 
 ARIA injects `logger -t sdc_eyes '...'` on every node directly (independent
@@ -231,13 +209,8 @@ Fill in `workspace/roles/telemetry/tasks/audit.yml`.
 ### Step 3.2 — Apply and Verify
 
 ```bash
-ansible-playbook site.yml
-```
-
-```bash
-cd ..
+ansible-playbook workspace/site.yml
 make test
-cd workspace
 ```
 
 ARIA checks two things independently: that `/etc/audit/rules.d/sdc.rules`
@@ -255,9 +228,7 @@ produces an event that actually reaches the collector.
 ### Step 4.1 — Verify Agent Delivery
 
 ```bash
-cd ..
 make test
-cd workspace
 ```
 
 ARIA drops a probe file into `{{ probe_dir }}` on every node and waits for
@@ -273,8 +244,8 @@ ARIA also re-runs `ansible-playbook site.yml` a second time and checks that
 it reports `changed=0` across the fleet. Run it yourself first:
 
 ```bash
-ansible-playbook site.yml
-ansible-playbook site.yml   # again — should report changed=0 for every host
+ansible-playbook workspace/site.yml
+ansible-playbook workspace/site.yml   # again — should report changed=0 for every host
 ```
 
 If the second run shows changes, something in your role is not converging
@@ -311,9 +282,7 @@ somewhere new. It then re-applies your role once.
 ### Step 5.2 — Run ARIA's Final Verification
 
 ```bash
-cd ..
 make test
-cd workspace
 ```
 
 For this phase, ARIA injects a fresh syslog event on every node **after**
