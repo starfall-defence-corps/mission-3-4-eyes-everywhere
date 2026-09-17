@@ -36,7 +36,7 @@ if [ $EXIT_CODE -eq 0 ]; then
     echo -e "  ARIA: All objectives verified."
     echo -e "  MOS 4 status: COMPLETE"
     echo -e ""
-    echo -e "  Cadet, the fleet is lit up. Every node's logs,"
+    echo -e "  Lieutenant Commander, the fleet is lit up. Every node's logs,"
     echo -e "  audit trail, and agent heartbeat are reaching the"
     echo -e "  collector — and they kept arriving after the Phantom"
     echo -e "  Logstash relocated it mid-mission. Textbook visibility."

@@ -40,9 +40,7 @@ make doctor
 make setup
 
 # 4. Build workspace/roles/telemetry, then apply it
-cd workspace
-ansible-playbook site.yml
-cd ..
+ansible-playbook workspace/site.yml
 
 # 5. Ask ARIA whether telemetry is actually arriving
 make test

@@ -290,9 +290,8 @@ There's no new file for this phase — it's the combination of Phases 1-3
 already shown above, run twice:
 
 ```bash
-cd workspace
-ansible-playbook site.yml
-ansible-playbook site.yml
+ansible-playbook workspace/site.yml
+ansible-playbook workspace/site.yml
 ```
 
 The second run's recap line for every host should read `changed=0`. If any
@@ -388,9 +387,8 @@ your own work the way ARIA does: trigger the event by hand on the node and
 watch for it, rather than trusting that "no errors" means "delivered."
 
 **"make: *** No targets specified" or "make: *** No rule to make target".**
-You are in the wrong directory. `make` commands must be run from the
-**project root**, where the `Makefile` lives — not from `workspace/`. Run
-`cd ..` to go back.
+You are not in the **project root** — `make` commands must be run from
+there, where the `Makefile` lives.
 
 **Never edit anything under `.docker/`.**
 That directory is the range itself — the fleet-node images, the collector
