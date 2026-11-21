@@ -99,6 +99,8 @@ make ssh-comms  SSH into sdc-comms  (172.30.0.13, port 2223)
 make submit     Submit your work for ARIA review (branch, commit, push, PR)
 ```
 
+> **Note:** `make submit` uses the [GitHub CLI](https://cli.github.com/) — install `gh` and run `gh auth login` once before your first submission.
+
 ## Mission Files
 
 | File | Purpose |
